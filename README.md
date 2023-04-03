@@ -1,24 +1,25 @@
-# README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Good Night Project
+=========
 
-Things you may want to cover:
+Ruby version
+---
+'3.0.2'
 
-* Ruby version
+Rails version
+---
+'~> 7.0.4', '>= 7.0.4.3'
 
-* System dependencies
+Database
+---
+See detail in database.yml
+DB Diagram - **https://dbdiagram.io/d/642acae15758ac5f1726500b**
 
-* Configuration
+Development
+---
+Testing Framework: RSpec and Factory Bot
 
-* Database creation
 
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+Issues
+---
+'skip_before_action :verify_authenticity_token' to skip authentication token.

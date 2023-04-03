@@ -2,7 +2,9 @@ class Api::V1::SleepRecordsController < ApplicationController
   skip_before_action :verify_authenticity_token
 
   def index
-    @sleep_records = SleepRecord.order(created_at: :desc)
+    @sleep_records = Rails.cache.fetch(SleepRecord.all.cache_key) do
+      SleepRecord.order(created_at: :desc)
+    end
     render json: @sleep_records
   end
 
@@ -18,9 +20,12 @@ class Api::V1::SleepRecordsController < ApplicationController
 
   def friends_sleep_records
     friends = User.find(params[:user_id]).followed_users
-    @sleep_records = SleepRecord.where(user_id: friends.ids)
-                                .where('clock_in >= ?', 1.week.ago)
-                                .order(Arel.sql('clock_out - clock_in DESC'))
+    cache_key = [friends.cache_key, 'sleep_records'].join('/')
+    @sleep_records = Rails.cache.fetch(cache_key) do
+      SleepRecord.where(user_id: friends.ids)
+                 .where('clock_in >= ?', 1.week.ago)
+                 .order(Arel.sql('clock_out - clock_in DESC'))
+    end
     render json: @sleep_records
   end
 end
