@@ -1,12 +1,19 @@
 class Api::V1::SleepRecordsController < ApplicationController
   skip_before_action :verify_authenticity_token
 
+  api :GET, '/sleep_records', 'Get sleep records'
+  description 'Get sleep records ordered by created time'
+
   def index
     @sleep_records = Rails.cache.fetch(SleepRecord.all.cache_key) do
       SleepRecord.order(created_at: :desc)
     end
     render json: @sleep_records, each_serializer: SleepRecordSerializer
   end
+
+  api :POST, '/clock_in', 'Clock In Operation'
+  description 'Create clock in for user'
+  param :user_id, Integer, required: true
 
   def clock_in
     user = User.find(params[:user_id])
@@ -17,6 +24,10 @@ class Api::V1::SleepRecordsController < ApplicationController
       render json: { message: 'Failed clocking in.' }
     end
   end
+
+  api :GET, '/friends_sleep_records', 'Get sleep records of friends'
+  description 'Get sleep records of friends over the past week ordered by the length of their sleep.'
+  param :user_id, Integer, required: true
 
   def friends_sleep_records
     @cache_key ||= begin
