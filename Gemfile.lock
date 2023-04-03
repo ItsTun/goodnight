@@ -73,6 +73,8 @@ GEM
       tzinfo (~> 2.0)
     addressable (2.8.2)
       public_suffix (>= 2.0.2, < 6.0)
+    apipie-rails (0.5.17)
+      rails (>= 4.1)
     bindex (0.8.1)
     bootsnap (1.16.0)
       msgpack (~> 1.2)
@@ -216,7 +218,6 @@ GEM
       actionpack (>= 5.2)
       activesupport (>= 5.2)
       sprockets (>= 3.0.0)
-    sqlite3 (1.6.2-x86_64-darwin)
     stimulus-rails (1.2.1)
       railties (>= 6.0.0)
     thor (1.2.1)
@@ -249,6 +250,7 @@ PLATFORMS
 
 DEPENDENCIES
   active_model_serializers
+  apipie-rails
   bootsnap
   capybara
   debug
@@ -264,7 +266,6 @@ DEPENDENCIES
   rspec-rails
   selenium-webdriver
   sprockets-rails
-  sqlite3 (~> 1.4)
   stimulus-rails
   turbo-rails
   tzinfo-data
