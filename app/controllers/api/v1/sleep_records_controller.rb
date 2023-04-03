@@ -5,7 +5,7 @@ class Api::V1::SleepRecordsController < ApplicationController
     @sleep_records = Rails.cache.fetch(SleepRecord.all.cache_key) do
       SleepRecord.order(created_at: :desc)
     end
-    render json: @sleep_records
+    render json: @sleep_records, each_serializer: SleepRecordSerializer
   end
 
   def clock_in
@@ -28,6 +28,6 @@ class Api::V1::SleepRecordsController < ApplicationController
                  .where('clock_in >= ?', 1.week.ago)
                  .order(Arel.sql('clock_out - clock_in DESC'))
     end
-    render json: @sleep_records
+    render json: @sleep_records, each_serializer: SleepRecordSerializer
   end
 end
