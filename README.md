@@ -12,7 +12,7 @@ Rails version
 
 API Documentation
 ---
-Can see api documentation at /apidoc/v1.html.
+Can see api documentation at **/apidoc/v1.html**
 
 Database
 ---
