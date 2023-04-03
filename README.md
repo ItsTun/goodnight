@@ -12,7 +12,6 @@ Rails version
 
 Database
 ---
-See detail in database.yml
 DB Diagram - **https://dbdiagram.io/d/642acae15758ac5f1726500b**
 
 Development
