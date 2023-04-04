@@ -2,9 +2,8 @@ class Api::V1::SleepRecordsController < ApplicationController
   skip_before_action :verify_authenticity_token
 
   def index
-    @sleep_records = Rails.cache.fetch(SleepRecord.all.cache_key) do
-      SleepRecord.order(created_at: :desc)
-    end
+    @sleep_records = SleepRecord.order(created_at: :desc)
+    Rails.cache.write(SleepRecord.all.cache_key, @sleep_records) if stale?(@sleep_records)
     render json: @sleep_records, each_serializer: SleepRecordSerializer
   end
 
