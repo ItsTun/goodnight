@@ -1,5 +1,6 @@
 class Api::V1::SleepRecordsController < ApplicationController
   skip_before_action :verify_authenticity_token
+  before_action :set_user, only: [:clock_in, :friends_sleep_records]
 
   def index
     @sleep_records = SleepRecord.order(created_at: :desc)
@@ -8,8 +9,7 @@ class Api::V1::SleepRecordsController < ApplicationController
   end
 
   def clock_in
-    user = User.find(params[:user_id])
-    sleep_record = user.sleep_records.new(clock_in: Time.now)
+    sleep_record = @user.sleep_records.new(clock_in: Time.now)
     if sleep_record.save
       render json: { message: 'Successfully clocked in.' }
     else
@@ -18,7 +18,7 @@ class Api::V1::SleepRecordsController < ApplicationController
   end
 
   def friends_sleep_records
-    friends = User.find(params[:user_id]).followed_users
+    friends = @user.followed_users
     cache_key = [friends.cache_key, 'sleep_records', 1.week.ago.to_i].join('/')
     @sleep_records = Rails.cache.fetch(cache_key) do
       SleepRecord.where(user_id: friends.select(:id))
@@ -26,5 +26,11 @@ class Api::V1::SleepRecordsController < ApplicationController
                  .order(Arel.sql('clock_out - clock_in DESC'))
     end
     render json: @sleep_records, each_serializer: SleepRecordSerializer
+  end
+
+  private
+
+  def set_user
+    @user = User.find(params[:user_id])
   end
 end
