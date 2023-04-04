@@ -1,6 +1,6 @@
 class Api::V1::SleepRecordsController < ApplicationController
   skip_before_action :verify_authenticity_token
-  before_action :set_user, only: [:clock_in, :friends_sleep_records]
+  before_action :set_user, only: %i[clock_in friends_sleep_records]
 
   def index
     @sleep_records = SleepRecord.order(created_at: :desc)
