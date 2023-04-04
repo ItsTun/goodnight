@@ -38,11 +38,10 @@ RSpec.describe Api::V1::SleepRecordsController, type: :controller do
 
     context 'with invalid params' do
       it 'raises ActiveRecord::RecordNotFound' do
-        expect {
+        expect do
           post :clock_in
-        }.to raise_error(ActiveRecord::RecordNotFound)
+        end.to raise_error(ActiveRecord::RecordNotFound)
       end
-
     end
   end
 
@@ -60,14 +59,24 @@ RSpec.describe Api::V1::SleepRecordsController, type: :controller do
       FactoryBot.create(:sleep_record, user: friend2, clock_in: 1.day.ago, clock_out: 1.day.ago + 7.hours)
     end
 
-    it 'returns a success response' do
-      get :friends_sleep_records, params: { user_id: user.id }
-      expect(response).to be_successful
+    context 'with valid params' do
+      it 'returns a success response' do
+        get :friends_sleep_records, params: { user_id: user.id }
+        expect(response).to be_successful
+      end
+
+      it 'returns only sleep records from friends within the last week' do
+        get :friends_sleep_records, params: { user_id: user.id }
+        expect(assigns(:sleep_records).count).to eq(4)
+      end
     end
 
-    it 'returns only sleep records from friends within the last week' do
-      get :friends_sleep_records, params: { user_id: user.id }
-      expect(assigns(:sleep_records).count).to eq(4)
+    context 'with invalid params' do
+      it 'raises ActiveRecord::RecordNotFound' do
+        expect do
+          get :friends_sleep_records
+        end.to raise_error(ActiveRecord::RecordNotFound)
+      end
     end
   end
 end
